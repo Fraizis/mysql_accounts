@@ -1,12 +1,16 @@
+import os
+
+from dotenv import load_dotenv
+
 from sqlalchemy import create_engine
 
-user = "root"
-password = "09021991qqQ"
-host = "127.0.0.1"
-port = 3306
-database = "shift_cftbank"
+load_dotenv()
 
+user = os.getenv('user')
+password = os.getenv('password')
+host = os.getenv('host')
+port = os.getenv('port')
+database = os.getenv('database')
 
 mysql_uri = f"mysql+pymysql://{user}:{password}@{host}:{port}"
-
 engine = create_engine(mysql_uri)
