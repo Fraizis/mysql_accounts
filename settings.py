@@ -10,7 +10,6 @@ user = os.getenv('user')
 password = os.getenv('password')
 host = os.getenv('host')
 port = os.getenv('port')
-database = os.getenv('database')
 
 mysql_uri = f"mysql+pymysql://{user}:{password}@{host}:{port}"
 engine = create_engine(mysql_uri)
