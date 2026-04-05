@@ -27,7 +27,7 @@ if __name__ == '__main__':
     with engine.connect() as con:
         con.execute(text('USE shift_cftbank'))
 
-        res = con.execute(text(q_4), {'date_search': '2026-04-04'})
+        res = con.execute(text(q_4), {'date_search': '2026-04-05'})
 
         for i in res.fetchall():
             print(i)
