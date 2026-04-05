@@ -195,7 +195,7 @@ VALUES
 """
 
 
-def create_db_and_tables():
+def create_db_tables_insert():
     with engine.connect() as con:
         con.execute(text('CREATE DATABASE IF NOT EXISTS shift_cftbank'))
 
