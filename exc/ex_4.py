@@ -1,6 +1,6 @@
-from sqlalchemy import text
+import sqlite3
 
-from settings import engine
+from main import mysql_uri
 
 # Сформируйте выборку, которая содержит счета, относящиеся к продуктам
 # типа ДЕПОЗИТ или КАРТА, по которым были операции внесения средств на
@@ -24,10 +24,10 @@ JOIN records AS r ON
 """
 
 if __name__ == '__main__':
-    with engine.connect() as con:
-        con.execute(text('USE shift_cftbank'))
+    with sqlite3.connect(f'../{mysql_uri}') as conn:
+        cursor = conn.cursor()
 
-        res = con.execute(text(q_4), {'date_search': '2026-04-05'})
+        res = cursor.execute(q_4, {'date_search': '2026-04-06'})
 
         for i in res.fetchall():
             print(i)

@@ -1,6 +1,6 @@
-from sqlalchemy import text
+import sqlite3
 
-from settings import engine
+from main import mysql_uri
 
 # Найдите клиентов, у которых открыт продукт типа КРЕДИТ, и у которых
 # сумма всех дебетовых операций по таким продуктам превышает сумму всех
@@ -27,10 +27,10 @@ WHERE sum_db > sum_cr;
 """
 
 if __name__ == '__main__':
-    with engine.connect() as con:
-        con.execute(text('USE shift_cftbank'))
+    with sqlite3.connect(f'../{mysql_uri}') as conn:
+        cursor = conn.cursor()
 
-        res = con.execute(text(q_5))
+        res = cursor.execute(q_5)
 
         for i in res.fetchall():
             print(i)

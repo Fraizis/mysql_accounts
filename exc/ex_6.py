@@ -1,6 +1,6 @@
-from sqlalchemy import text
+import sqlite3
 
-from settings import engine
+from main import mysql_uri
 
 # В результате сбоя в базе данных разъехалась информация между остатками
 # и операциями по счетам. Напишите нормализацию (процедуру выравнивающую данные),
@@ -21,16 +21,16 @@ WITH ac AS (
 	JOIN records AS r ON r.acc_ref = a.id
 	GROUP BY acc_ref
 )
-UPDATE accounts a
-JOIN ac ON ac.acc_ref = a.id
-SET saldo = (new_saldo + ABS(new_saldo * 0.01)); 
+UPDATE accounts AS a 
+SET saldo = (SELECT new_saldo + ABS(new_saldo * 0.01) FROM ac WHERE acc_ref = a.id)
+WHERE EXISTS (SELECT new_saldo + ABS(new_saldo * 0.01) FROM ac WHERE acc_ref = a.id); 
 """
 
-
 if __name__ == '__main__':
-    with engine.connect() as con:
-        con.execute(text('USE shift_cftbank'))
+    with sqlite3.connect(f'../{mysql_uri}') as conn:
+        cursor = conn.cursor()
 
-        con.execute(text(q_6))
-        con.commit()
+        res = cursor.executescript(q_6)
+
+        conn.commit()
         print('Saldo changed')
