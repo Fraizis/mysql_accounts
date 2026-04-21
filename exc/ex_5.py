@@ -1,6 +1,7 @@
-import sqlite3
+from loguru import logger
+from mysql import connector
 
-from main import mysql_uri
+from main import mysql_connect
 
 # Найдите клиентов, у которых открыт продукт типа КРЕДИТ, и у которых
 # сумма всех дебетовых операций по таким продуктам превышает сумму всех
@@ -26,11 +27,24 @@ JOIN ac ON client_ref = c.id
 WHERE sum_db > sum_cr;
 """
 
+
+def query_5(conn):
+    try:
+        cur = conn.cursor()
+        cur.execute(q_5)
+        result = cur.fetchall()
+        logger.info(f"Results for: {q_5}")
+
+        for r in result:
+            logger.info(r)
+
+        cur.close()
+        conn.close()
+
+    except connector.Error as err:
+        logger.error(f"Произошла ошибка: {err}")
+
+
 if __name__ == '__main__':
-    with sqlite3.connect(f'../{mysql_uri}') as conn:
-        cursor = conn.cursor()
-
-        res = cursor.execute(q_5)
-
-        for i in res.fetchall():
-            print(i)
+    conn = mysql_connect()
+    query_5(conn)

@@ -1,6 +1,7 @@
-import sqlite3
+from loguru import logger
+from mysql import connector
 
-from main import mysql_uri
+from main import mysql_connect
 
 # В результате сбоя в базе данных разъехалась информация между остатками
 # и операциями по счетам. Напишите нормализацию (процедуру выравнивающую данные),
@@ -26,11 +27,23 @@ SET saldo = (SELECT new_saldo + ABS(new_saldo * 0.01) FROM ac WHERE acc_ref = a.
 WHERE EXISTS (SELECT new_saldo + ABS(new_saldo * 0.01) FROM ac WHERE acc_ref = a.id); 
 """
 
+
+def query_6(conn):
+    try:
+        cur = conn.cursor()
+        cur.execute(q_6)
+        cur.fetchmany()
+        logger.info(f"Results for: {q_6}")
+
+        logger.info('Saldo changed')
+
+        cur.close()
+        conn.close()
+
+    except connector.Error as err:
+        logger.error(f"Произошла ошибка: {err}")
+
+
 if __name__ == '__main__':
-    with sqlite3.connect(f'../{mysql_uri}') as conn:
-        cursor = conn.cursor()
-
-        res = cursor.executescript(q_6)
-
-        conn.commit()
-        print('Saldo changed')
+    conn = mysql_connect()
+    query_6(conn)
