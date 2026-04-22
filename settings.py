@@ -1,6 +1,6 @@
 user_data = {
-    'user': "root",
-    'password': "09021991qqQ",
+    'user': "user",
+    'password': "password",
     'host': "localhost",
-    'database': "shift_cftbank"
+    'database': "database_name"
 }
